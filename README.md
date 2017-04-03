@@ -42,8 +42,8 @@ All problems are in the Air Cargo domain.  They have the same action schema defi
 
 - Air Cargo Action Schema:
 ```
-Action(Load(c, p, a),
-	PRECOND: At(c, a) ∧ At(p, a) ∧ Cargo(c) ∧ Plane(p) ∧ Airport(a)
+Action(Load(c, p, a),  
+	PRECOND: At(c, a) ∧ At(p, a) ∧ Cargo(c)   ∧ Plane(p) ∧ Airport(a)  
 	EFFECT: ¬ At(c, a) ∧ In(c, p))
 Action(Unload(c, p, a),
 	PRECOND: In(c, p) ∧ At(p, a) ∧ Cargo(c) ∧ Plane(p) ∧ Airport(a)
