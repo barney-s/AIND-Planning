@@ -100,6 +100,12 @@ class PgNode_s(PgNode):
             return (self.symbol == other.symbol) \
                    and (self.is_pos == other.is_pos)
 
+    def is_negation(self, other):
+        if isinstance(other, self.__class__):
+            return (self.symbol == other.symbol) \
+                   and (self.is_pos != other.is_pos)
+
+
     def __hash__(self):
         return hash(self.symbol) ^ hash(self.is_pos)
 
@@ -347,6 +353,7 @@ class PlanningGraph():
         anodes = self.a_levels[level-1]
         for a in anodes:
             for s in a.effnodes:
+                s.add_parent(a)
                 snodes.add(s)
         self.s_levels.append(snodes)
  
@@ -499,8 +506,7 @@ class PlanningGraph():
         :param node_s2: PgNode_s
         :return: bool
         '''
-        # TODO test for negation between nodes
-        return False
+        return node_s1.is_negation(node_s2)
 
     def inconsistent_support_mutex(self, node_s1: PgNode_s, node_s2: PgNode_s):
         '''
@@ -519,14 +525,29 @@ class PlanningGraph():
         :return: bool
         '''
         # TODO test for Inconsistent Support between nodes
-        return False
+        for a1 in node_s1.parents:
+            for a2 in node_s2.parents:
+                if not a1.is_mutex(a2):
+                    return False
+        return True
 
     def h_levelsum(self) -> int:
         '''The sum of the level costs of the individual goals (admissible if goals independent)
 
         :return: int
         '''
-        level_sum = 0
         # TODO implement
         # for each goal in the problem, determine the level cost, then add them together
+        def level_cost(goal):
+            cost = 0
+            goal = PgNode_s(goal, True)
+            for lvl in self.s_levels:
+                if goal in lvl:
+                   return cost
+                cost += 1
+            return float("inf")
+
+        level_sum = 0
+        for goal in self.problem.goal:
+            level_sum += level_cost(goal)
         return level_sum
