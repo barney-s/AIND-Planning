@@ -13,7 +13,7 @@
 datafile=$1.csv
 echo "problem,search,expansions,tests,new nodes,plan length,time" > $datafile
 for p in 1 2 3; do
-  for s in 1 2 3 4 5 6 7 8 9; do
+  for s in 1 2 3 4 5 6 7 8 9 10; do
      echo -n $p,$s, >> $datafile
      op1=$(cat output/op-$p-$s.txt  | grep -1 Expansions | tail -n 1 | awk '{ print $1"," $2"," $3}')
      op2=$(cat output/op-$p-$s.txt  | grep Plan  | awk '{ print $3","$8 }')
